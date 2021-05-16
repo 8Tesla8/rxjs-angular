@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { range, of, from, throwError } from 'rxjs';
+import { range, of, from, throwError, Observable } from 'rxjs';
 import {
   map,
   filter,
@@ -9,6 +9,8 @@ import {
   tap,
   catchError,
 } from 'rxjs/operators';
+import { HttpService } from './json-handler.service';
+import { Product } from './product.model';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +18,10 @@ import {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor() {
+
+  public products$: Observable<Product[]>;
+
+  constructor(private jsonHandler: HttpService) {
     // this.of();
     // this.from();
     // this.range();
@@ -27,6 +32,11 @@ export class AppComponent {
     // this.map();
     // this.tap();
     this.catchError();
+
+    this.products$ = jsonHandler.getProducts();
+    //.subscribe(
+    //  x => console.log(x)
+    //);
   }
 
   public of(): void {
