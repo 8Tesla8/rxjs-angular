@@ -22,7 +22,7 @@ export class AppComponent {
   public products$: Observable<Product[]>;
 
   constructor(private jsonHandler: HttpService) {
-    // this.of();
+    this.of();
     // this.from();
     // this.range();
     // this.first();
@@ -43,6 +43,10 @@ export class AppComponent {
     of(1, 2, 3) //of can work with sequence
       .subscribe((x) => console.log('of: ' + x));
     // 1 2 3
+
+    of([4, 5, 6]) //of can work with sequence
+    .subscribe((x) => console.log('of: ' + x));
+  // 4,5,6
   }
 
   public from(): void {
