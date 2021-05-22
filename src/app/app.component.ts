@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { range, of, from, throwError, Observable } from 'rxjs';
+import { range, of, from, throwError, Observable, combineLatest, merge } from 'rxjs';
 import {
   map,
   filter,
@@ -34,9 +34,9 @@ export class AppComponent {
     this.catchError();
 
     this.products$ = jsonHandler.getProducts();
-    //.subscribe(
-    //  x => console.log(x)
-    //);
+
+    // this.combineLatest();
+    this.merge();
   }
 
   public of(): void {
@@ -96,6 +96,21 @@ export class AppComponent {
       .pipe(map((x) => x * 3))
       .subscribe((x) => console.log('map x * 3: ' + x));
     // 3 6 9 12 15
+
+
+    let names = this.jsonHandler.getProducts()
+    .pipe(
+      map( (array: Product[]) =>{ 
+        let result: string[] = [];
+        array.forEach(element => {
+          result.push(element.name)
+        });
+
+        return result; }
+        ) 
+      )
+      .subscribe(n => console.log(n) );
+    // [ "oil" , "egg" , "bread" ]
   }
 
   public tap(): void {
@@ -126,5 +141,29 @@ export class AppComponent {
     )
     .subscribe((x) => console.log('catchError: ' + x));
     // catchError: This is an error! 
+  }
+
+  public combineLatest():void{
+    combineLatest(range(1, 5), this.jsonHandler.getProducts())
+    .subscribe( ([number, products]:any)=> {
+
+      let pr = ""; 
+      
+      products.forEach( (element: Product) => {
+        pr += JSON.stringify(element);
+      });
+
+      console.log('number: ' + number + ' products: ' + pr);
+    });
+  }
+
+  public merge():void{
+    merge(from(["q", "w", "e"]), from(["a", "s", "d"]), from(["z", "x", "c"]))
+    .pipe(
+      //tap((x:any) => console.log("tap: " + x))
+    )
+    .subscribe( 
+      (x:any) => console.log("result: " + x)
+    )
   }
 }

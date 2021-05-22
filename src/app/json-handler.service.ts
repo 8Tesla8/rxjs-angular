@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, catchError } from 'rxjs/operators';
 import { User } from './user.model';
 import { Product } from './product.model';
+import { of } from 'rxjs';
    
 @Injectable()
 export class HttpService{
@@ -22,13 +23,12 @@ export class HttpService{
         }));
     }
 
-    public getProducts()
-    : Observable<Product[]>
+    public getProducts(): Observable<Product[]>
      {
         return this.http.get('assets/products.json')
         .pipe(
-            //tap(data => console.log('Products: ', JSON.stringify(data) ) )
-            //,catchError( )
+            tap((data:any) => console.log('Products: ', JSON.stringify(data)) ),
+            catchError((x) => of(`I caught: ${x}`))
         ) as Observable<Product[]>;
     }
 }
