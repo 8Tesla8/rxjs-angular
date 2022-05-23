@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { range, of, from, throwError, Observable, combineLatest, merge } from 'rxjs';
+import { range, of, from, throwError, Observable, combineLatest, merge, forkJoin } from 'rxjs';
 import {
   map,
   filter,
@@ -169,5 +169,16 @@ export class AppComponent {
     .subscribe( 
       (x:any) => console.log("result: " + x)
     )
+  }
+  
+  public forkJoin():void{
+    const observable = forkJoin({
+      foo: of(1, 2, 3, 4),
+      bar: Promise.resolve(8),
+    });
+   observable.subscribe(res=>{
+     //to get value  - res.foo foo.bar
+     console.log(res);
+   });
   }
 }
